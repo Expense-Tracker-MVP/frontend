@@ -9,15 +9,10 @@ const SignInPage = () => {
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     try {
-      // TODO: Implement Google OAuth signin logic here
-      console.log("Google sign in clicked!")
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
+      // Redirect to backend OAuth endpoint
+      window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login/google`
     } catch (error) {
       console.error("Google sign in failed:", error)
-    } finally {
       setIsLoading(false)
     }
   }
@@ -29,18 +24,17 @@ const SignInPage = () => {
           <h1 className="text-3xl font-bold text-gray-900">Sign In</h1>
           <p className="mt-2 text-gray-600">Welcome back!</p>
         </div>
-        
+
         <div className="space-y-4">
-          <GoogleButton 
+          <GoogleButton
             onClick={handleGoogleSignIn}
             disabled={isLoading}
           />
-          
+
           {isLoading && (
             <p className="text-center text-gray-500">Signing in...</p>
           )}
-          
-          {/* Navigation */}
+
           <div className="text-center pt-4">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
