@@ -14,22 +14,22 @@ const SignUpPage = () => {
           <h1 className="text-3xl font-bold text-gray-900">Sign Up</h1>
           <p className="mt-2 text-gray-600">Create your account</p>
         </div>
-        
+
         <div className="space-y-4">
-          <GoogleButton 
+          <GoogleButton
             onClick={handleGoogleAuth}
             disabled={isGoogleAuthLoading}
           />
-          
+
           {isGoogleAuthLoading && (
             <p className="text-center text-gray-500">Signing up with Google...</p>
           )}
-          
+
           {/* You can add other signup methods here */}
           <div className="text-center">
             <span className="text-gray-500">or</span>
           </div>
-          
+
           {/* Email signup form would go here */}
           <div className="text-center">
             <p className="text-sm text-gray-600">
