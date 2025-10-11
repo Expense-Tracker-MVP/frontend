@@ -1,21 +1,11 @@
 "use client"
 
-import React, { useState } from 'react'
+import React from 'react'
 import GoogleButton from '@/components/GoogleButton'
+import { useGoogleAuth } from '@/hooks/useGoogleAuth'
 
 const SignInPage = () => {
-  const [isLoading, setIsLoading] = useState(false)
-
-  const handleGoogleSignIn = async () => {
-    setIsLoading(true)
-    try {
-      // Redirect to backend OAuth endpoint
-      window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login/google`
-    } catch (error) {
-      console.error("Google sign in failed:", error)
-      setIsLoading(false)
-    }
-  }
+  const { isGoogleAuthLoading, handleGoogleAuth } = useGoogleAuth()
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -27,11 +17,11 @@ const SignInPage = () => {
 
         <div className="space-y-4">
           <GoogleButton
-            onClick={handleGoogleSignIn}
-            disabled={isLoading}
+            onClick={handleGoogleAuth}
+            disabled={isGoogleAuthLoading}
           />
 
-          {isLoading && (
+          {isGoogleAuthLoading && (
             <p className="text-center text-gray-500">Signing in...</p>
           )}
 
