@@ -37,7 +37,7 @@ export const useAuthGuard = () => {
     }
 
     const redirectToSignIn = () => {
-        window.location.href = '/auth/signin'
+        window.location.href = '/sign-in'
     }
 
     return {

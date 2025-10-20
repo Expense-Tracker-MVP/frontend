@@ -50,7 +50,7 @@ const AuthCallbackPage = () => {
 
     const handleRetryAuth = () => {
         // Clear auth state and redirect to signin
-        router.push('/auth/signin')
+        router.push('/sign-in')
     }
 
     if (status === 'processing') {

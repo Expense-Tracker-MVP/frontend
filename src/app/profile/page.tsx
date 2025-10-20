@@ -17,7 +17,7 @@ const ProfilePage = () => {
             fetchUserProfile()
         } else if (!authLoading && !isAuthenticated) {
             // Redirect to signin if not authenticated and auth loading is complete
-            window.location.href = '/auth/signin'
+            window.location.href = '/sign-in'
         }
     }, [isAuthenticated, authLoading])
 
@@ -27,13 +27,13 @@ const ProfilePage = () => {
 
             // Check if user is authenticated
             if (!isAuthenticated || !token) {
-                window.location.href = '/auth/signin'
+                window.location.href = '/sign-in'
                 return
             }
 
             // Check auth status (handles token expiration)
             if (!checkAuth()) {
-                window.location.href = '/auth/signin'
+                window.location.href = '/sign-in'
                 return
             }
 
@@ -42,7 +42,7 @@ const ProfilePage = () => {
         } catch (err) {
             if (err instanceof Error && err.message.includes('token')) {
                 // Token related error, redirect to signin
-                window.location.href = '/auth/signin'
+                window.location.href = '/sign-in'
                 return
             }
             setError(err instanceof Error ? err.message : 'Failed to load profile')
@@ -89,7 +89,7 @@ const ProfilePage = () => {
             // Always clear Zustand auth state
             logout()
             // Redirect to signin page
-            window.location.href = '/auth/signin'
+            window.location.href = '/sign-in'
         }
     }
 
@@ -129,7 +129,7 @@ const ProfilePage = () => {
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center">
                     <p className="text-gray-600">No user data found</p>
-                    <a href="/auth/signin" className="text-blue-600 hover:text-blue-500 mt-2 inline-block">
+                    <a href="/sign-in" className="text-blue-600 hover:text-blue-500 mt-2 inline-block">
                         Sign In
                     </a>
                 </div>

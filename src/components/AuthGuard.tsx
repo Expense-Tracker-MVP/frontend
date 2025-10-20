@@ -13,7 +13,7 @@ interface AuthGuardProps {
 export const AuthGuard = ({
     children,
     fallback = <div>Checking authentication...</div>,
-    redirectTo = '/auth/signin'
+    redirectTo = '/sign-in'
 }: AuthGuardProps) => {
     const { isAuthenticated, isLoading } = useAuth()
     const { checkAuth } = useAuthActions()

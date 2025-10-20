@@ -28,7 +28,7 @@ const SignInPage = () => {
           <div className="text-center pt-4">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
-              <a href="/auth/signup" className="text-blue-600 hover:text-blue-500">
+              <a href="/sign-up" className="text-blue-600 hover:text-blue-500">
                 Sign up
               </a>
             </p>
