@@ -2,7 +2,7 @@
 
 import React from 'react'
 import GoogleButton from '@/components/GoogleButton'
-import { useGoogleAuth } from '@/hooks/useGoogleAuth'
+import { useGoogleAuth } from '@/lib/hooks/useGoogleAuth'
 
 const SignUpPage = () => {
   const { isGoogleAuthLoading, handleGoogleAuth } = useGoogleAuth()

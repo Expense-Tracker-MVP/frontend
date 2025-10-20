@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { User, BackendUserResponse } from '@/types/user'
-import { parseJWT, isTokenExpired } from '@/utils/auth'
+import { User, BackendUserResponse } from '@/lib/types/user'
+import { parseJWT, isTokenExpired } from '@/lib/utils/auth'
 
 interface AuthState {
     // State

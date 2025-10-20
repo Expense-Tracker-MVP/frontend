@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { User } from '@/types/user'
-import { useAuth, useAuthActions } from '@/store/authStore'
-import { authenticatedFetch } from '@/utils/auth'
+import { User } from '@/lib/types/user'
+import { useAuth, useAuthActions } from '@/lib/store/authStore'
+import { authenticatedFetch } from '@/lib/utils/auth'
 
 const ProfilePage = () => {
     const { user, isAuthenticated, token, isLoading: authLoading } = useAuth()

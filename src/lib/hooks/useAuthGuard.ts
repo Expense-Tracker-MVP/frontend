@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { AuthTokens, isTokenExpired } from '@/utils/auth'
+import { AuthTokens, isTokenExpired } from '@/lib/utils/auth'
 
 export const useAuthGuard = () => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useAuthActions } from '@/store/authStore'
+import { useAuthActions } from '@/lib/store/authStore'
 
 const AuthCallbackPage = () => {
     const router = useRouter()
