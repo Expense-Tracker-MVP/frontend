@@ -1,8 +1,19 @@
+html, body {
+  height: 100%;
+}
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f1f2ed; /* Clean white base */
+  --foreground: #1a1a1a; /* Dark text for readability */
+  --primary: #12c58a;    /* Vibrant emerald green
+  --secondary: #06b6d4;  /* Cyan accent */
+  --accent: #8b5cf6;     /* Purple accent */
+  --gray: #101828;       /* Neutral gray */
+  --surface: #f9fafb;    /* Subtle off-white for cards/surfaces */
+  --border: #e5e7eb;     /* Light borders */
 }
 
 @theme inline {
@@ -12,15 +23,34 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+
+.dark {
+  --background: #18181b; /* Deep dark background for contrast */
+  --foreground: #f3f4f6; /* Light text for readability */
+  --primary: #10b981;
+  --secondary: #06b6d4;
+  --accent: #8b5cf6;
+  --gray: #a1a1aa;
+  --surface: #23232a;
+  --border: #27272a;
+}
+
+html {
+  background: var(--background);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Satoshi', Arial, Helvetica, sans-serif;
 }
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi/Satoshi-Regular.woff2') format('woff2'),
+       url('/fonts/satoshi/Satoshi-Regular.woff') format('woff');
+  font-style: normal;
+  font-display: swap;
+}
+/* Add more @font-face rules for other weights/styles if needed */
