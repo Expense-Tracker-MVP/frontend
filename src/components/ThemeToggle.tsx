@@ -1,7 +1,9 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 
-const ThemeToggle: React.FC = () => {
+type Props = React.HTMLAttributes<HTMLDivElement>;
+
+const ThemeToggle: React.FC<Props> = ({ className, ...rest }) => {
   const [isDark, setIsDark] = useState<boolean>(false);
 
   useEffect(() => {
@@ -20,7 +22,7 @@ const ThemeToggle: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center">
+    <div className={`flex items-centers ${className ?? ''}`} {...rest}>
       <label htmlFor="dark-toggle" className="flex items-center cursor-pointer select-none">
         <div className="relative">
           <input
