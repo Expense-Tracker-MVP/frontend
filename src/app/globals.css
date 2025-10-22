@@ -27,7 +27,7 @@ html, body {
 .dark {
   --background: #18181b; /* Deep dark background for contrast */
   --foreground: #f3f4f6; /* Light text for readability */
-  --primary: #10b981;
+  --primary: #0d7d58;
   --secondary: #06b6d4;
   --accent: #8b5cf6;
   --gray: #a1a1aa;
