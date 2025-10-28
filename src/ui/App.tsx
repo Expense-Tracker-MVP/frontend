@@ -3,6 +3,13 @@ import reactLogo from './assets/react.svg'
 
 import './App.css'
 
+/**
+ * Renders the application UI: a linked React logo, a "Vite + React" heading, an interactive counter button, and instructional text.
+ *
+ * The counter button displays the current count and increments it when clicked.
+ *
+ * @returns The rendered JSX element for the application UI
+ */
 function App() {
   const [count, setCount] = useState(0)
 
