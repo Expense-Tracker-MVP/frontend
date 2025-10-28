@@ -11,7 +11,6 @@ A cross-platform desktop application for tracking personal expenses. It uses a m
 - [Build & distribution](#build--distribution)
 - [Packaging notes (electron-builder)](#packaging-notes-electron-builder)
 - [Troubleshooting & tips](#troubleshooting--tips)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Tech stack
