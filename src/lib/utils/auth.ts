@@ -4,7 +4,16 @@ export const AuthTokens = {
     // Get the stored auth token
     getToken: (): string | null => {
         if (typeof window === 'undefined') return null
-        return localStorage.getItem('authToken')
+        const raw = localStorage.getItem('auth-storage')
+        if (!raw) return null
+
+        try {
+            const parsed = JSON.parse(raw)
+            return parsed?.state?.token
+        } catch (err) {
+            console.warn('Failed to parse auth-storage from localStorage', err)
+            return null
+        }
     },
 
     // Set the auth token
@@ -18,6 +27,21 @@ export const AuthTokens = {
         if (typeof window === 'undefined') return
         localStorage.removeItem('authToken')
         localStorage.removeItem('userEmail')
+    },
+
+    // Get stored user id
+    getUserId: (): string | null => {
+        if (typeof window === 'undefined') return null
+        const raw = localStorage.getItem('auth-storage')
+        if (!raw) return null
+
+        try {
+            const parsed = JSON.parse(raw)
+            return parsed?.state?.user?.id ?? null
+        } catch (err) {
+            console.warn('Failed to parse auth-storage from localStorage', err)
+            return null
+        }
     },
 
     // Get stored user email

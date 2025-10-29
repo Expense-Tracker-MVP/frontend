@@ -1,6 +1,8 @@
 "use client"
 
 import React, { useState } from 'react'
+import { useAuth } from '@/lib/store/authStore'
+import { createExpenseApi } from '@/lib/apis/expenses'
 
 type Expense = {
     id?: string
@@ -19,21 +21,7 @@ type FormState = {
     currency: string
 }
 
-// Small mock API that simulates a network call to create an expense
-const mockCreateExpense = (expense: Expense) => {
-    return new Promise<Expense>((resolve, reject) => {
-        // Simulate network latency
-        setTimeout(() => {
-            // Very small chance to fail to make error handling testable
-            if (Math.random() < 0.08) {
-                reject(new Error('Network error while creating expense'))
-                return
-            }
 
-            resolve({ ...expense, id: Math.random().toString(36).slice(2, 9) })
-        }, 700)
-    })
-}
 
 const defaultForm: FormState = {
     description: '',
@@ -51,6 +39,7 @@ const AddExpenseForm: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState<string | null>(null)
+    const { user } = useAuth()
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -82,6 +71,7 @@ const AddExpenseForm: React.FC = () => {
         setLoading(true)
         try {
             const expenseToCreate: Expense = {
+                id: user?.id || '',
                 description: form.description,
                 amount: parseFloat(form.amount),
                 date: form.date,
@@ -89,7 +79,7 @@ const AddExpenseForm: React.FC = () => {
                 currency: form.currency,
             }
 
-            const created = await mockCreateExpense(expenseToCreate)
+            const created = await createExpenseApi(expenseToCreate)
             setSuccess(
                 `Saved expense "${created.description}" (${created.currency ?? ''} ${created.amount.toFixed(2)})`
             )

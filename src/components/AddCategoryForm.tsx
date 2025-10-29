@@ -1,27 +1,7 @@
 "use client"
 
 import React, { useState } from 'react'
-
-type Category = {
-    id?: string
-    name: string
-    description?: string
-    color?: string
-}
-
-
-// mock API
-const mockCreateCategory = (category: Category) => {
-    return new Promise<Category>((resolve, reject) => {
-        setTimeout(() => {
-            if (Math.random() < 0.08) {
-                reject(new Error('Failed to create category'))
-                return
-            }
-            resolve({ ...category, id: Math.random().toString(36).slice(2, 9) })
-        }, 500)
-    })
-}
+import { createCategoryApi, type Category } from '@/lib/apis/categories'
 
 const defaultForm = { name: '', description: '', color: '#06b6d4' }
 
@@ -56,10 +36,11 @@ const AddCategoryForm: React.FC = () => {
 
         setLoading(true)
         try {
-            const created = await mockCreateCategory(form)
+            const created = await createCategoryApi(form as Category)
             setSuccess(`Created category "${created.name}"`)
             setForm(defaultForm)
         } catch (err: any) {
+            console.log(`error in handleSubmit: ${err}`)
             setError(err?.message ?? 'Unknown error')
         } finally {
             setLoading(false)
