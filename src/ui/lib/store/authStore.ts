@@ -2,27 +2,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { type User, type BackendUserResponse } from '@ui/lib/types/user'
 import { isTokenExpired } from '@ui/lib/utils/auth'
-
-interface AuthState {
-    // State
-    user: User | null
-    accessToken: string | null
-    isAuthenticated: boolean
-    isLoading: boolean
-    error: string | null
-
-    // Actions
-    login: (token: string, userEmail?: string) => void
-    logout: () => Promise<void>
-    clearError: () => void
-    setLoading: (loading: boolean) => void
-    setError: (error: string | null) => void
-    updateUser: (user: Partial<User>) => void
-    checkAuth: () => boolean
-    initializeAuth: () => void
-    fetchCurrentUser: () => Promise<void>
-    refreshToken: () => Promise<boolean>
-}
+import type { AuthState } from '@/ui/lib/types/auth'
 
 const BASE_URL = import.meta.env.VITE_PUBLIC_BACKEND_URL
 

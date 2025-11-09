@@ -1,7 +1,4 @@
-interface GoogleButtonProps {
-    onClick?: () => void;
-    disabled?: boolean;
-}
+import type { GoogleButtonProps } from '@ui/lib/types/components'
 
 const GoogleButton = ({ onClick, disabled = false }: GoogleButtonProps) => {
     return (

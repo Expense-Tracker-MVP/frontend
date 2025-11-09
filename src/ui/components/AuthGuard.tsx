@@ -1,12 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { useAuth, useAuthActions } from '@ui/lib/store/authStore'
-
-interface AuthGuardProps {
-    children: React.ReactNode
-    fallback?: React.ReactNode
-    redirectTo?: string
-}
+import type { AuthGuardProps } from '@/ui/lib/types/components'
 
 export const AuthGuard = ({
     children,
