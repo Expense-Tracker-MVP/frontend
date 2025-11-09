@@ -1,0 +1,16 @@
+{
+  "appId": "com.xitij27.expense-tracker",
+  "files": ["dist-electron", "dist-react"],
+  "extraResources": ["src/ui/assets/**"],
+  "icon": "./desktopIcon.png",
+  "mac": {
+    "target": "dmg"
+  },
+  "linux": {
+    "target": "AppImage",
+    "category": "Utility"
+  },
+  "win": {
+    "target": ["portable", "msi"]
+  }
+}
