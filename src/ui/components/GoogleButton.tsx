@@ -4,7 +4,7 @@ const GoogleButton = ({ onClick, disabled = false }: GoogleButtonProps) => {
     return (
         <button
             type="button"
-            className="w-full shadow-lg border border-[var(--border)] rounded-md px-4 py-2 my-2 cursor-pointer flex items-center justify-center gap-2 transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full shadow-lg border border-(--border) rounded-md px-4 py-2 my-2 cursor-pointer flex items-center justify-center gap-2 transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50"
             onClick={onClick}
             disabled={disabled}
         >

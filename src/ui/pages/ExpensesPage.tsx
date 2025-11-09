@@ -4,7 +4,7 @@ import AddExpenseForm from '@ui/components/AddExpenseForm';
 const ExpensesPage = () => {
 
   return (
-    <div className="flex p-4 justify-between bg-[var(--background)]">
+    <div className="flex p-4 justify-between bg--background)">
       <div className="flex-1 max-w">
         <AddExpenseForm />
       </div>
