@@ -26,4 +26,5 @@ dist-electron
 
 font
 .env*
+.vite
 
