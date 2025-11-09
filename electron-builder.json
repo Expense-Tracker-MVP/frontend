@@ -1,7 +1,7 @@
 {
   "appId": "com.xitij27.expense-tracker",
   "files": ["dist-electron", "dist-react"],
-  "extraResources": ["dist-electron/preload.cjs", "src/ui/assets/**"],
+  "extraResources": ["src/ui/assets/**"],
   "icon": "./desktopIcon.png",
   "mac": {
     "target": "dmg"
