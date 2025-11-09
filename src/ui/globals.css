@@ -13,6 +13,7 @@ html, body {
   --accent: #8b5cf6;     /* Purple accent */
   --gray: #101828;       /* Neutral gray */
   --surface: #f9fafb;    /* Subtle off-white for cards/surfaces */
+  --input: #ffffff;      /* Input fields background */
   --border: #e5e7eb;     /* Light borders */
 }
 
@@ -30,9 +31,10 @@ html, body {
   --primary: #0d7d58;
   --secondary: #06b6d4;
   --accent: #8b5cf6;
-  --gray: #a1a1aa;
+  --gray: #878787;
   --surface: #23232a;
-  --border: #27272a;
+  --input: #37373b;      /* Input fields background */
+  --border: #5a5a5a;
 }
 
 html {

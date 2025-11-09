@@ -1,15 +1,56 @@
 import { BrowserRouter, Routes, Route } from 'react-router';
+import './globals.css';
+import { AuthProvider } from './components/AuthProvider';
+import { AuthGuard } from './components/AuthGuard';
 import HomePage from './pages/HomePage';
-import './index.css';
+import ExpensesPage from './pages/ExpensesPage';
+import SignInPage from './pages/SignInPage';
+import SignUpPage from './pages/SignUpPage';
+import ProfilePage from './pages/ProfilePage';
+import AuthCallbackPage from './pages/AuthCallbackPage';
+import Navbar from './components/NavBar';
 
 function App() {
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={
+            <>
+              <Navbar />
+              <HomePage />
+            </>
+          } />
+          <Route path="/sign-in" element={
+            <>
+              <Navbar />
+              <SignInPage />
+            </>
+          } />
+          <Route path="/sign-up" element={
+            <>
+              <Navbar />
+              <SignUpPage />
+            </>
+          } />
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/expenses" element={
+            <AuthGuard>
+              <Navbar />
+              <ExpensesPage />
+            </AuthGuard>
+          } />
+          <Route path="/profile" element={
+            <AuthGuard>
+              <Navbar />
+              <ProfilePage />
+            </AuthGuard>
+          } />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 
