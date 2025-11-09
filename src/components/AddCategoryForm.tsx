@@ -2,10 +2,12 @@
 
 import React, { useState } from 'react'
 import { createCategoryApi, type Category } from '@/lib/apis/categories'
+import { useAuth } from "@/lib/store/authStore"
 
 const defaultForm = { name: '', description: '', color: '#06b6d4' }
 
 const AddCategoryForm: React.FC = () => {
+    const { token } = useAuth();
     const [form, setForm] = useState(defaultForm)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -36,7 +38,7 @@ const AddCategoryForm: React.FC = () => {
 
         setLoading(true)
         try {
-            const created = await createCategoryApi(form as Category)
+            const created = await createCategoryApi(form as Category, token as string)
             setSuccess(`Created category "${created.name}"`)
             setForm(defaultForm)
         } catch (err: any) {

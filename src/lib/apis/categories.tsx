@@ -18,8 +18,7 @@ type CreateCategoryResponse = {
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
 
-export async function createCategoryApi(category: Category): Promise<Category> {
-    const token = AuthTokens.getToken()
+export async function createCategoryApi(category: Category, token: string): Promise<Category> {
     const id = AuthTokens.getUserId()
 
     if (id) {

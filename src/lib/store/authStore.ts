@@ -6,7 +6,7 @@ import { parseJWT, isTokenExpired } from '@/lib/utils/auth'
 interface AuthState {
     // State
     user: User | null
-    token: string | null
+    accessToken: string | null
     isAuthenticated: boolean
     isLoading: boolean
     error: string | null
@@ -29,39 +29,21 @@ export const useAuthStore = create<AuthState>()(
         (set, get) => ({
             // Initial state
             user: null,
-            token: null,
+            accessToken: null,
             isAuthenticated: false,
             isLoading: false,
             error: null,
 
             // Login action
-            login: (token: string, userEmail?: string) => {
+            login: (accessToken: string, userEmail?: string) => {
                 try {
-                    // Parse token to get user data
-                    const tokenData = parseJWT(token)
-
-                    if (!tokenData) {
-                        throw new Error('Invalid token format')
-                    }
-
-                    console.log('JWT Token Data:', tokenData) // Debug log
-
                     // Check if token is expired
-                    if (isTokenExpired(token)) {
+                    if (isTokenExpired(accessToken)) {
                         throw new Error('Token has expired')
                     }
 
-                    // Create user object from token
-                    const user: User = {
-                        id: tokenData.userId || tokenData.sub || '',
-                        email: tokenData.email || userEmail || tokenData.sub || 'No email',
-                        provider: tokenData.provider || 'google',
-                        created_at: tokenData.iat ? new Date(tokenData.iat * 1000).toISOString() : new Date().toISOString()
-                    }
-
                     set({
-                        user,
-                        token,
+                        accessToken: accessToken,
                         isAuthenticated: true,
                         error: null,
                         isLoading: false
@@ -70,8 +52,7 @@ export const useAuthStore = create<AuthState>()(
                 } catch (error) {
                     console.error('Login error:', error)
                     set({
-                        user: null,
-                        token: null,
+                        accessToken: null,
                         isAuthenticated: false,
                         error: error instanceof Error ? error.message : 'Login failed',
                         isLoading: false
@@ -82,14 +63,14 @@ export const useAuthStore = create<AuthState>()(
             // Logout action
             logout: async () => {
                 try {
-                    const { token } = get()
+                    const { accessToken } = get()
 
                     // Call backend logout endpoint
-                    if (token) {
+                    if (accessToken) {
                         await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/logout`, {
                             method: 'POST',
                             headers: {
-                                'Authorization': `Bearer ${token}`,
+                                'Authorization': `Bearer ${accessToken}`,
                                 'Content-Type': 'application/json'
                             },
                             credentials: 'include'
@@ -101,7 +82,7 @@ export const useAuthStore = create<AuthState>()(
                     // Always clear auth state regardless of backend response
                     set({
                         user: null,
-                        token: null,
+                        accessToken: null,
                         isAuthenticated: false,
                         error: null,
                         isLoading: false
@@ -136,18 +117,18 @@ export const useAuthStore = create<AuthState>()(
 
             // Check authentication status
             checkAuth: () => {
-                const { token } = get()
+                const { accessToken } = get()
 
-                if (!token) {
+                if (!accessToken) {
                     set({ isAuthenticated: false, user: null })
                     return false
                 }
 
-                if (isTokenExpired(token)) {
+                if (isTokenExpired(accessToken)) {
                     // Token expired, clear auth state
                     set({
                         user: null,
-                        token: null,
+                        accessToken: null,
                         isAuthenticated: false,
                         error: 'Session expired'
                     })
@@ -159,10 +140,12 @@ export const useAuthStore = create<AuthState>()(
             },
 
             // Initialize auth state (call on app startup)
-            initializeAuth: () => {
-                const { token, checkAuth } = get()
+            initializeAuth: async () => {
+                // Call the refreshToken action from the store (use get())
+                await get().refreshToken()
+                const { accessToken, checkAuth } = get()
 
-                if (token) {
+                if (accessToken) {
                     checkAuth()
                 } else {
                     set({ isLoading: false })
@@ -172,16 +155,16 @@ export const useAuthStore = create<AuthState>()(
             // Fetch current user from backend
             fetchCurrentUser: async () => {
                 try {
-                    const { token } = get()
+                    const { accessToken } = get()
 
-                    if (!token) {
-                        throw new Error('No authentication token')
+                    if (!accessToken) {
+                        throw new Error('No access token')
                     }
 
                     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/user`, {
                         method: 'GET',
                         headers: {
-                            'Authorization': `Bearer ${token}`,
+                            'Authorization': `Bearer ${accessToken}`,
                             'Content-Type': 'application/json'
                         },
                         credentials: 'include'
@@ -223,56 +206,41 @@ export const useAuthStore = create<AuthState>()(
                 }
             },
 
-            // Refresh authentication token
             refreshToken: async () => {
                 try {
-                    const { token } = get()
-
                     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/refresh`, {
                         method: 'POST',
                         headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
                         },
-                        credentials: 'include'
-                    })
+                        credentials: 'include', // sends refresh cookie
+                    });
 
                     if (!response.ok) {
-                        throw new Error('Failed to refresh token')
+                        throw new Error('Failed to refresh token');
                     }
 
-                    const data = await response.json()
+                    const data = await response.json();
+                    console.log('Token refresh response:', data); // Debug log
+                    if (data.accessToken) {
+                        // Update token and user info directly from backend
+                        set({
+                            accessToken: data.accessToken,
+                            user: data.user,
+                            isAuthenticated: true,
+                            error: null,
+                        });
 
-                    if (data.token) {
-                        // Update token and parse user data if needed
-                        const tokenData = parseJWT(data.token)
-
-                        if (tokenData) {
-                            const user: User = {
-                                id: tokenData.userId || tokenData.sub || '',
-                                email: tokenData.email || tokenData.sub || 'No email',
-                                provider: tokenData.provider || 'google',
-                                created_at: tokenData.iat ? new Date(tokenData.iat * 1000).toISOString() : new Date().toISOString()
-                            }
-
-                            set({
-                                token: data.token,
-                                user,
-                                isAuthenticated: true,
-                                error: null
-                            })
-
-                            return true
-                        }
+                        return true;
                     }
 
-                    return false
+                    return false;
                 } catch (error) {
-                    console.error('Error refreshing token:', error)
+                    console.error('Error refreshing token:', error);
                     set({
-                        error: error instanceof Error ? error.message : 'Failed to refresh token'
-                    })
-                    return false
+                        error: error instanceof Error ? error.message : 'Failed to refresh token',
+                    });
+                    return false;
                 }
             }
         }),
@@ -280,7 +248,7 @@ export const useAuthStore = create<AuthState>()(
             name: 'auth-storage',
             storage: createJSONStorage(() => localStorage),
             partialize: (state) => ({
-                token: state.token,
+                // token: state.token,
                 user: state.user,
                 isAuthenticated: state.isAuthenticated
             }), // only persist these fields
@@ -293,7 +261,7 @@ export const useAuth = () => {
     const auth = useAuthStore()
     return {
         user: auth.user,
-        token: auth.token,
+        token: auth.accessToken,
         isAuthenticated: auth.isAuthenticated,
         isLoading: auth.isLoading,
         error: auth.error

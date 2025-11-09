@@ -20,15 +20,15 @@ const AuthCallbackPage = () => {
             setLoading(true)
 
             // Extract token and user info from URL parameters
-            const token = searchParams.get('token')
+            const accessToken = searchParams.get('accessToken')
             const user = searchParams.get('user')
 
-            if (!token) {
-                throw new Error('No authentication token received')
+            if (!accessToken) {
+                throw new Error('No access token received')
             }
 
             // Use Zustand store to handle login
-            login(token, user ? decodeURIComponent(user) : undefined)
+            login(accessToken, user ? decodeURIComponent(user) : undefined)
 
             setStatus('success')
 
