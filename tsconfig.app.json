@@ -25,5 +25,6 @@
     "noUncheckedSideEffectImports": true
   },
   "include": ["src"],
-  "exclude": ["src/electron"] // Exclude Electron files because it expects frontend code but Electron is just a node project. So electron will need it's own tsconfig.json if needed.
+  "exclude": ["src/electron"], // Exclude Electron files because it expects frontend code but Electron is just a node project. So electron will need it's own tsconfig.json if needed.
+  "extends": "./tsconfig.json"
 }
