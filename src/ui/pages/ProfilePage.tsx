@@ -8,10 +8,11 @@ const ProfilePage = () => {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (isAuthenticated && !authLoading) {
+    // Only fetch if authenticated and user data is missing
+    if (isAuthenticated && !authLoading && !user) {
       fetchUserProfile()
     }
-  }, [isAuthenticated, authLoading])
+  }, [isAuthenticated, authLoading, user])
 
   const fetchUserProfile = async () => {
     try {

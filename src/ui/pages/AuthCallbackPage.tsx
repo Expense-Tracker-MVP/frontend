@@ -4,7 +4,7 @@ import { useAuthActions } from '@ui/lib/store/authStore'
 
 const AuthCallbackPage = () => {
     const navigate = useNavigate()
-    const { login, setError, setLoading } = useAuthActions()
+    const { login, setError, setLoading, fetchCurrentUser } = useAuthActions()
     const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing')
     const [error, setLocalError] = useState<string | null>(null)
 
@@ -27,13 +27,14 @@ const AuthCallbackPage = () => {
 
             // Use Zustand store to handle login
             login(accessToken, user ? decodeURIComponent(user) : undefined)
+            await fetchCurrentUser()
 
             setStatus('success')
 
             // Redirect to profile after a brief success message
             setTimeout(() => {
                 navigate('/profile')
-            }, 2000)
+            }, 1000)
         } catch (err) {
             console.error('Authentication callback error:', err)
             const errorMessage = err instanceof Error ? err.message : 'Authentication failed'

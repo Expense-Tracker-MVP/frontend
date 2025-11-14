@@ -26,11 +26,11 @@ app.on("ready", () => {
     });
 
     // Handle external link clicks - open in default browser
+    // But allow OAuth flow to happen in the main window
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-        // If it's an OAuth URL, handle it specially
-        if (url.includes('/api/v1/auth/login/google')) {
-            shell.openExternal(url);
-            return { action: 'deny' };
+        // For OAuth and internal navigation, allow in main window
+        if (url.includes('/api/v1/auth/') || url.includes('/auth/callback')) {
+            return { action: 'allow' };
         }
         
         // For other external links, open in default browser
