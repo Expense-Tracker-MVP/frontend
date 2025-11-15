@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
-import { useAuth, useAuthActions } from '@ui/lib/store/authStore'
+import { useAuthState, useAuthActions } from '@ui/lib/store/authStore'
 
 const ProfilePage = () => {
-  const { user, isAuthenticated, isLoading: authLoading } = useAuth()
+  const { user, isAuthenticated, isLoading: authLoading } = useAuthState()
   const { logout, fetchCurrentUser } = useAuthActions()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // Only fetch if authenticated and user data is missing
     if (isAuthenticated && !authLoading && !user) {
       fetchUserProfile()
     }

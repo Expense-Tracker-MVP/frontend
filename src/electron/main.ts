@@ -1,5 +1,5 @@
 import { app, BrowserWindow, shell } from "electron";
-import path, {dirname} from "path";
+import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 
@@ -9,6 +9,36 @@ const __dirname = dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 let mainWindow: BrowserWindow | null = null;
+
+// Whitelist of allowed URLs for OAuth and internal navigation
+function isAllowedUrl(urlString: string): boolean {
+    try {
+        const url = new URL(urlString);
+        const backendUrl = process.env.VITE_PUBLIC_BACKEND_URL;
+        const frontendUrl = process.env.VITE_PUBLIC_FRONTEND_URL;
+
+        if (!backendUrl || !frontendUrl) {
+            throw new Error("Missing environment variables");
+        }
+
+        // Allow backend OAuth endpoints
+        if (url.origin === new URL(backendUrl).origin) {
+            return url.pathname.startsWith('/api/v1/auth/') ||
+                url.pathname.startsWith('/oauth2/');
+        }
+
+        // Allow frontend callback route
+        if (url.origin === new URL(frontendUrl).origin || urlString.startsWith('file://')) {
+            return url.pathname.includes('/auth/callback');
+        }
+
+        // Allow Google OAuth domains
+        const allowedDomains = ['accounts.google.com', 'oauth2.googleapis.com'];
+        return allowedDomains.includes(url.hostname);
+    } catch {
+        return false;
+    }
+}
 
 app.on("ready", () => {
     mainWindow = new BrowserWindow({
@@ -29,21 +59,20 @@ app.on("ready", () => {
     // But allow OAuth flow to happen in the main window
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
         // For OAuth and internal navigation, allow in main window
-        if (url.includes('/api/v1/auth/') || url.includes('/auth/callback')) {
+        if (isAllowedUrl(url)) {
             return { action: 'allow' };
         }
-        
+
         // For other external links, open in default browser
         if (url.startsWith('http://') || url.startsWith('https://')) {
             shell.openExternal(url);
             return { action: 'deny' };
         }
-        
+
         return { action: 'allow' };
     });
 
     if (process.env.NODE_ENV === 'development') {
-        console.log('Loading URL for development');
         mainWindow.loadURL('http://localhost:5173');
     }
     else {
@@ -58,8 +87,6 @@ app.on("ready", () => {
 function handleOAuthCallback(url: string) {
     if (url.includes('/auth/callback')) {
         console.log('OAuth callback detected:', url);
-        // The URL already contains the callback route and parameters
-        // Just let it load normally in the main window
     }
 }
 

@@ -1,70 +1,38 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { type User, type BackendUserResponse } from '@ui/lib/types/user'
-import { isTokenExpired } from '@ui/lib/utils/auth'
+import type { User } from '@ui/lib/types/user'
 import type { AuthState } from '@/ui/lib/types/auth'
-
-const BASE_URL = import.meta.env.VITE_PUBLIC_BACKEND_URL
+import { logoutApi, fetchCurrentUserApi, refreshTokenApi } from '@ui/lib/apis/auth'
 
 export const useAuthStore = create<AuthState>()(
     persist(
         (set, get) => ({
             // Initial state
             user: null,
-            accessToken: null,
             isAuthenticated: false,
             isLoading: false,
             error: null,
 
-            // Login action
-            login: (accessToken: string) => {
-                try {
-                    // Check if token is expired
-                    if (isTokenExpired(accessToken)) {
-                        throw new Error('Token has expired')
-                    }
-
-                    set({
-                        accessToken: accessToken,
-                        isAuthenticated: true,
-                        error: null,
-                        isLoading: false
-                    })
-
-                } catch (error) {
-                    console.error('Login error:', error)
-                    set({
-                        accessToken: null,
-                        isAuthenticated: false,
-                        error: error instanceof Error ? error.message : 'Login failed',
-                        isLoading: false
-                    })
-                }
+            // Login action - now just sets authenticated state
+            // TODO: Currently not used. Consider removing.
+            login: () => {
+                set({
+                    isAuthenticated: true,
+                    error: null,
+                    isLoading: false
+                })
             },
 
             // Logout action
             logout: async () => {
                 try {
-                    const { accessToken } = get()
-
-                    // Call backend logout endpoint
-                    if (accessToken) {
-                        await fetch(`${BASE_URL}/api/v1/auth/logout`, {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${accessToken}`,
-                                'Content-Type': 'application/json'
-                            },
-                            credentials: 'include'
-                        })
-                    }
+                    await logoutApi()
                 } catch (error) {
                     console.error('Error during logout:', error)
                 } finally {
                     // Always clear auth state regardless of backend response
                     set({
                         user: null,
-                        accessToken: null,
                         isAuthenticated: false,
                         error: null,
                         isLoading: false
@@ -98,91 +66,50 @@ export const useAuthStore = create<AuthState>()(
             },
 
             // Check authentication status
-            checkAuth: () => {
-                const { accessToken } = get()
-
-                if (!accessToken) {
-                    set({ isAuthenticated: false, user: null })
-                    return false
-                }
-
-                if (isTokenExpired(accessToken)) {
-                    // Token expired, clear auth state
-                    set({
-                        user: null,
-                        accessToken: null,
-                        isAuthenticated: false,
-                        error: 'Session expired'
+            // TODO: this has a side effects which is fetching user data. Consider excluding that.
+            checkAuth: async () => {
+                try {
+                    set({ isLoading: true })
+                    
+                    const user = await fetchCurrentUserApi()
+                    set({ 
+                        isAuthenticated: true, 
+                        user,
+                        error: null,
+                        isLoading: false
                     })
+                    return true
+                } catch (error) {
+                    console.error('Auth check failed:', error)
+                    set({ isAuthenticated: false, user: null, isLoading: false })
                     return false
                 }
-
-                set({ isAuthenticated: true, error: null })
-                return true
             },
 
             // Initialize auth state (call on app startup)
             initializeAuth: async () => {
                 // Set loading state first
                 set({ isLoading: true })
-
-                // Call the refreshToken action from the store (use get())
-                await get().refreshToken()
-                const { accessToken, checkAuth } = get()
-
-                if (accessToken) {
-                    checkAuth()
+                
+                // Try to refresh token silently
+                const refreshed = await get().refreshToken()
+                
+                if (refreshed) {
+                    set({ isAuthenticated: true, isLoading: false })
+                } else {
+                    set({ isAuthenticated: false, user: null, isLoading: false })
                 }
-
-                // Always set loading to false when done
-                set({ isLoading: false })
             },
 
             // Fetch current user from backend
             fetchCurrentUser: async () => {
                 try {
-                    const { accessToken } = get()
-
-                    if (!accessToken) {
-                        throw new Error('No access token')
-                    }
-
-                    const response = await fetch(`${BASE_URL}/api/v1/auth/user`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`,
-                            'Content-Type': 'application/json'
-                        },
-                        credentials: 'include'
+                    const user = await fetchCurrentUserApi()
+                    set({
+                        user,
+                        isAuthenticated: true,
+                        error: null
                     })
-
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch user: ${response.status}`)
-                    }
-
-                    const responseData: BackendUserResponse = await response.json()
-                    console.log('Backend user response:', responseData) // Debug log
-
-                    // Handle the nested structure from your backend
-                    if (responseData.authenticated && responseData.user) {
-                        const backendUser = responseData.user
-
-                        // Map backend fields to our User interface
-                        const user: User = {
-                            id: backendUser.id,
-                            email: backendUser.email,
-                            provider: backendUser.provider,
-                            created_at: backendUser.createdAt
-                        }
-
-                        set({
-                            user,
-                            isAuthenticated: true,
-                            error: null
-                        })
-                    } else {
-                        throw new Error('Invalid response format from backend')
-                    }
                 } catch (error) {
                     console.error('Error fetching current user:', error)
                     set({
@@ -194,39 +121,24 @@ export const useAuthStore = create<AuthState>()(
 
             refreshToken: async () => {
                 try {
-                    const response = await fetch(`${BASE_URL}/api/v1/auth/refresh`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        credentials: 'include', // sends refresh cookie
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to refresh token');
-                    }
-
-                    const data = await response.json();
-                    console.log('Token refresh response:', data); // Debug log
-                    if (data.accessToken) {
-                        // Update token and user info directly from backend
+                    const user = await refreshTokenApi()
+                    
+                    if (user) {
                         set({
-                            accessToken: data.accessToken,
-                            user: data.user,
+                            user,
                             isAuthenticated: true,
                             error: null,
-                        });
-
-                        return true;
+                        })
+                        return true
                     }
 
-                    return false;
+                    return false
                 } catch (error) {
-                    console.error('Error refreshing token:', error);
+                    console.error('Error refreshing token:', error)
                     set({
                         error: error instanceof Error ? error.message : 'Failed to refresh token',
-                    });
-                    return false;
+                    })
+                    return false
                 }
             }
         }),
@@ -249,11 +161,10 @@ export const useAuthStore = create<AuthState>()(
 )
 
 // Selectors for easy access to specific state
-export const useAuth = () => {
+export const useAuthState = () => {
     const auth = useAuthStore()
     return {
         user: auth.user,
-        token: auth.accessToken,
         isAuthenticated: auth.isAuthenticated,
         isLoading: auth.isLoading,
         error: auth.error

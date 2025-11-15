@@ -4,7 +4,7 @@ import { useAuthActions } from '@ui/lib/store/authStore'
 
 const AuthCallbackPage = () => {
     const navigate = useNavigate()
-    const { login, setError, setLoading, fetchCurrentUser } = useAuthActions()
+    const { setError, setLoading, fetchCurrentUser } = useAuthActions()
     const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing')
     const [error, setLocalError] = useState<string | null>(null)
 
@@ -16,19 +16,15 @@ const AuthCallbackPage = () => {
         try {
             setLoading(true)
 
-            // Extract token and user info from URL parameters
+            // Check if OAuth was successful
             const urlParams = new URLSearchParams(window.location.search)
-            const accessToken = urlParams.get('accessToken')
-            const user = urlParams.get('user')
+            const oauthStatus = urlParams.get('status')
 
-            if (!accessToken) {
-                throw new Error('No access token received')
+            if (oauthStatus !== 'success') {
+                throw new Error('OAuth authentication was not successful')
             }
 
-            // Use Zustand store to handle login
-            login(accessToken, user ? decodeURIComponent(user) : undefined)
             await fetchCurrentUser()
-
             setStatus('success')
 
             // Redirect to profile after a brief success message

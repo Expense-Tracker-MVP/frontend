@@ -1,4 +1,4 @@
-import { AuthTokens } from "@ui/lib/utils/auth"
+import { fetchWithAuth } from '@ui/lib/utils/fetchWithAuth'
 
 export type Category = {
     id?: string
@@ -16,17 +16,10 @@ type CreateCategoryResponse = {
 
 const BASE_URL = `${import.meta.env.VITE_PUBLIC_BACKEND_URL}/api/v1`;
 
-export async function createCategoryApi(category: Category, token: string): Promise<Category> {
-    const id = AuthTokens.getUserId()
-
-    if (id) {
-        category.userId = id
-    }
-
-    const res = await fetch(`${BASE_URL}/categories`, {
+export async function createCategoryApi(category: Category): Promise<Category> {
+    const res = await fetchWithAuth(`${BASE_URL}/categories`, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
 		credentials: 'include',

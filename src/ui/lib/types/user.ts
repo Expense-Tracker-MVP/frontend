@@ -16,6 +16,22 @@ export interface BackendUserResponse {
     }
 }
 
+export type CreateUserResponse = {
+    status: "success" | "error"
+    message?: string
+    data?: User
+}
+
+export type LogoutResponse = {
+    success: boolean
+    message?: string
+}
+
+export type RefreshTokenResponse = {
+    user?: User
+    message?: string
+}
+
 export interface UserProfileData {
     user: User
     // Add any additional profile data here

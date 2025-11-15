@@ -1,4 +1,4 @@
-import { useAuth } from '@ui/lib/store/authStore'
+import { fetchWithAuth } from '@ui/lib/utils/fetchWithAuth'
 
 export type Expense = {
 	id?: string
@@ -18,12 +18,9 @@ type CreateExpenseResponse = {
 const BASE_URL = import.meta.env.VITE_PUBLIC_BACKEND_URL
 
 export async function createExpenseApi(expense: Expense): Promise<Expense> {
-	const { token } = useAuth()
-
-    const res = await fetch(`${BASE_URL}/api/v1/expenses`, {
+    const res = await fetchWithAuth(`${BASE_URL}/api/v1/expenses`, {
 		method: 'POST',
         headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
 		credentials: 'include',

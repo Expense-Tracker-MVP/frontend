@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useAuth } from '@ui/lib/store/authStore'
+import { useAuthState } from '@ui/lib/store/authStore'
 import { createExpenseApi } from '@ui/lib/apis/expenses'
 
 type Expense = {
@@ -35,7 +35,7 @@ const AddExpenseForm: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState<string | null>(null)
-    const { user } = useAuth()
+    const { user } = useAuthState()
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
