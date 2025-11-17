@@ -51,13 +51,13 @@ const ExpensesPage = () => {
   const loading = categoriesLoading || expensesLoading
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[var(--background)] p-6">
+    <div className="min-h-[calc(100vh-4rem)] bg-background p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-[var(--foreground)]">My Expenses</h1>
-            <p className="text-[var(--foreground)]/60 mt-1">
+            <h1 className="text-3xl font-bold text-foreground">My Expenses</h1>
+            <p className="text-foreground/60 mt-1">
               Track your spending by category
             </p>
           </div>
@@ -79,14 +79,14 @@ const ExpensesPage = () => {
         {/* Loading State */}
         {loading && (
           <div className="text-center py-12">
-            <p className="text-[var(--foreground)]/60">Loading...</p>
+            <p className="text-foreground/60">Loading...</p>
           </div>
         )}
 
         {/* Empty State */}
         {!loading && categories.length === 0 && (
-          <div className="text-center py-12 bg-[var(--surface)] rounded-lg border border-[var(--border)]">
-            <p className="text-[var(--foreground)]/60 mb-4">
+          <div className="text-center py-12 bg-surface rounded-lg border border-border">
+            <p className="text-foreground/60 mb-4">
               No categories yet. Create one to start tracking expenses.
             </p>
             <button

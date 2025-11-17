@@ -37,10 +37,10 @@ const CategoryCard = ({ category, expenses, isExpanded, onToggleExpand, onExpens
   }
 
   return (
-    <div className={`bg-[var(--surface)] border border-[var(--border)] rounded-lg shadow-md overflow-hidden flex flex-col ${!isExpanded ? 'h-full' : ''}`}>
+    <div className={`bg-surface border border-border rounded-lg shadow-md overflow-hidden flex flex-col ${!isExpanded ? 'h-full' : ''}`}>
       {/* Header */}
       <div 
-        className="p-4 flex items-center justify-between flex-shrink-0"
+        className="p-4 flex items-center justify-between shrink-0"
         style={{ backgroundColor: category.color || '#6366f1' }}
       >
         <div className="text-white">
@@ -83,7 +83,7 @@ const CategoryCard = ({ category, expenses, isExpanded, onToggleExpand, onExpens
 
       {/* Edit Category Form */}
       {editingCategory && (
-        <div className="p-4 bg-[var(--background)] border-b border-[var(--border)]">
+        <div className="p-4 bg-background border-b border-border">
           <EditCategoryForm 
             category={category}
             onSuccess={() => {
@@ -97,7 +97,7 @@ const CategoryCard = ({ category, expenses, isExpanded, onToggleExpand, onExpens
 
       {/* Add Expense Form */}
       {showAddForm && (
-        <div className="p-4 bg-[var(--background)] border-b border-[var(--border)]">
+        <div className="p-4 bg-background border-b border-border">
           <AddExpenseForm 
             preSelectedCategoryId={category.id}
             onSuccess={() => {
@@ -109,12 +109,12 @@ const CategoryCard = ({ category, expenses, isExpanded, onToggleExpand, onExpens
       )}
 
       {/* Summary */}
-      <div className="p-4 bg-[var(--background)]/50">
+      <div className="p-4 bg-background/50">
         <div className="flex justify-between items-center text-sm">
-          <span className="text-[var(--foreground)]/70">
+          <span className="text-foreground/70">
             {categoryExpenses.length} {categoryExpenses.length === 1 ? 'expense' : 'expenses'}
           </span>
-          <span className="font-semibold text-[var(--foreground)]">
+          <span className="font-semibold text-foreground">
             ${totalAmount.toFixed(2)}
           </span>
         </div>
@@ -123,14 +123,14 @@ const CategoryCard = ({ category, expenses, isExpanded, onToggleExpand, onExpens
       {/* Expenses List */}
       <div className={`p-4 space-y-2 overflow-y-auto ${isExpanded ? 'max-h-[600px]' : 'max-h-96'}`}>
         {categoryExpenses.length === 0 ? (
-          <p className="text-center text-[var(--foreground)]/50 py-8">
+          <p className="text-center text-foreground/50 py-8">
             No expenses yet. Click + to add one.
           </p>
         ) : (
           categoryExpenses.map((expense) => (
             <div key={expense.id || `${expense.userId}-${expense.transactionDate}-${expense.name}`}>
               {editingExpense === expense.id ? (
-                <div className="p-2 bg-[var(--background)] rounded border border-[var(--border)]">
+                <div className="p-2 bg-background rounded border border-border">
                   <EditExpenseForm 
                     expense={expense}
                     onSuccess={() => {

@@ -23,20 +23,20 @@ const ExpenseCard = ({ expense, onEdit, onDelete }: ExpenseCardProps) => {
   }
 
   return (
-    <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-3 hover:shadow-md transition-shadow">
+    <div className="bg-surface border border-border rounded-lg p-3 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start">
         <div className="flex-1">
-          <h4 className="font-medium text-[var(--foreground)]">{expense.name}</h4>
+          <h4 className="font-medium text-foreground">{expense.name}</h4>
           {expense.description && (
-            <p className="text-sm text-[var(--foreground)]/60 mt-1">{expense.description}</p>
+            <p className="text-sm text-foreground/60 mt-1">{expense.description}</p>
           )}
-          <p className="text-xs text-[var(--foreground)]/50 mt-2">
+          <p className="text-xs text-foreground/50 mt-2">
             {formatDate(expense.transactionDate)}
             {expense.source && ` · ${expense.source}`}
           </p>
         </div>
         <div className="text-right ml-4">
-          <p className="font-semibold text-[var(--foreground)]">
+          <p className="font-semibold text-foreground">
             {expense.currency || 'SGD'} ${expense.amount.toFixed(2)}
           </p>
           {(onEdit || onDelete) && (

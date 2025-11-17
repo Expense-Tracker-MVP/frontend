@@ -109,7 +109,7 @@ const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ preSelectedCategoryId, 
     }
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-md p-4 bg-[var(--surface)] rounded shadow dark:text-slate-100">
+        <form onSubmit={handleSubmit} className="max-w-md p-4 bg-surface rounded shadow dark:text-slate-100">
             <h3 className="text-lg font-medium mb-3">Add Expense</h3>
 
             {error && (
@@ -127,7 +127,7 @@ const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ preSelectedCategoryId, 
                     value={form.name}
                     onChange={handleChange}
                     required
-                    className="mt-1 block w-full border rounded p-2 bg-[var(--input)] border-[var(--border)] text-gray-900 dark:text-slate-100"
+                    className="mt-1 block w-full border rounded p-2 bg-input border-border text-gray-900 dark:text-slate-100"
                     placeholder="Short title for expense, e.g. 'Lunch'"
                 />
             </label>
@@ -138,7 +138,7 @@ const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ preSelectedCategoryId, 
                     name="description"
                     value={form.description}
                     onChange={handleChange}
-                    className="mt-1 block w-full border rounded p-2 bg-[var(--input)] border-[var(--border)] text-gray-900 dark:text-slate-100"
+                    className="mt-1 block w-full border rounded p-2 bg-input border-border text-gray-900 dark:text-slate-100"
                     placeholder="Coffee, groceries, ..."
                 />
             </label>
@@ -151,7 +151,7 @@ const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ preSelectedCategoryId, 
                     name="amount"
                     value={form.amount}
                     onChange={handleChange}
-                    className="mt-1 block w-full border rounded p-2 border-[var(--border)] text-gray-900 bg-[var(--input)] dark:text-slate-100"
+                    className="mt-1 block w-full border rounded p-2 border-border text-gray-900 bg-input dark:text-slate-100"
                     placeholder="0.00"
                 />
             </label>
@@ -162,7 +162,7 @@ const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ preSelectedCategoryId, 
                     name="currency"
                     value={form.currency}
                     onChange={handleChange}
-                    className="mt-1 block w-full border rounded p-2 border-[var(--border)] text-gray-900 bg-[var(--input)] dark:text-slate-100"
+                    className="mt-1 block w-full border rounded p-2 border-border text-gray-900 bg-input dark:text-slate-100"
                 >
                     {currencies.map(c => (
                         <option key={c} value={c}>
@@ -179,7 +179,7 @@ const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ preSelectedCategoryId, 
                     name="date"
                     value={form.date}
                     onChange={handleChange}
-                    className="mt-1 block w-full border rounded p-2 border-[var(--border)] text-gray-900 bg-[var(--input)] dark:text-slate-100"
+                    className="mt-1 block w-full border rounded p-2 border-border text-gray-900 bg-input dark:text-slate-100"
                 />
             </label>
 
@@ -190,7 +190,7 @@ const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ preSelectedCategoryId, 
                         name="category"
                         value={form.category}
                         onChange={handleChange}
-                        className="mt-1 block w-full border rounded p-2 border-[var(--border)] text-gray-900 bg-[var(--input)] dark:text-slate-100"
+                        className="mt-1 block w-full border rounded p-2 border-border text-gray-900 bg-input dark:text-slate-100"
                     >
                         {categoriesLoading && <option>Loading...</option>}
                         {!categoriesLoading && categoriesList.length === 0 && (

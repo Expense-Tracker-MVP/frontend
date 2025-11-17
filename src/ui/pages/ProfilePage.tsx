@@ -55,7 +55,7 @@ const ProfilePage = () => {
 
   if (authLoading || isLoading) {
     return (
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-[var(--background)]">
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-background">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600 dark:text-slate-300">Loading profile...</p>
@@ -66,8 +66,8 @@ const ProfilePage = () => {
 
   if (error) {
     return (
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-[var(--background)]">
-        <div className="max-w-md w-full space-y-8 p-8 bg-[var(--surface)] rounded-lg shadow-md">
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-background">
+        <div className="max-w-md w-full space-y-8 p-8 bg-surface rounded-lg shadow-md">
           <div className="text-center">
             <div className="text-red-500 text-6xl mb-4">⚠️</div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">Error Loading Profile</h1>
@@ -86,7 +86,7 @@ const ProfilePage = () => {
 
   if (!user) {
     return (
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-[var(--background)]">
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-background">
         <div className="text-center">
           <p className="text-gray-600 dark:text-slate-300">No user data found</p>
           <a href="/sign-in" className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 mt-2 inline-block">
@@ -98,10 +98,10 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[var(--background)] py-12">
+    <div className="min-h-[calc(100vh-4rem)] bg-background py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="bg-[var(--surface)] rounded-lg shadow-md p-6 mb-6">
+        <div className="bg-surface rounded-lg shadow-md p-6 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="w-16 h-16 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center">
@@ -126,7 +126,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Profile Information */}
-        <div className="bg-[var(--surface)] rounded-lg shadow-md p-6">
+        <div className="bg-surface rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-6">Profile Information</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -134,7 +134,7 @@ const ProfilePage = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 User ID
               </label>
-              <div className="bg-[var(--input)] p-3 rounded-md">
+              <div className="bg-input p-3 rounded-md">
                 <code className="text-sm text-gray-800 dark:text-slate-100 break-all">{user.id}</code>
               </div>
             </div>
@@ -143,7 +143,7 @@ const ProfilePage = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 Email Address
               </label>
-              <div className="bg-[var(--input)] p-3 rounded-md">
+              <div className="bg-input p-3 rounded-md">
                 <span className="text-sm text-gray-800 dark:text-slate-100">{user.email || 'No email available'}</span>
               </div>
             </div>
@@ -152,7 +152,7 @@ const ProfilePage = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 Authentication Provider
               </label>
-              <div className="bg-[var(--input)] p-3 rounded-md">
+              <div className="bg-input p-3 rounded-md">
                 <span className="text-sm text-gray-800 dark:text-slate-100">{getProviderDisplayName(user.provider)}</span>
               </div>
             </div>
@@ -161,14 +161,14 @@ const ProfilePage = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 Account Created
               </label>
-              <div className="bg-[var(--input)] p-3 rounded-md">
+              <div className="bg-input p-3 rounded-md">
                 <span className="text-sm text-gray-800 dark:text-slate-100">{formatDate(user.created_at)}</span>
               </div>
             </div>
           </div>
 
           {/* Additional Actions */}
-          <div className="mt-8 pt-6 border-t border-[var(--border)]">
+          <div className="mt-8 pt-6 border-t border-border">
             <h3 className="text-lg font-medium text-gray-900 dark:text-slate-100 mb-4">Account Actions</h3>
             <div className="flex flex-wrap gap-3">
               <button className="bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">

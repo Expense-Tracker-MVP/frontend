@@ -50,7 +50,7 @@ const AddCategoryForm: React.FC<AddCategoryFormProps> = ({ onCategoryAdded }) =>
     }
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-md p-4 bg-[var(--surface)] rounded shadow">
+        <form onSubmit={handleSubmit} className="max-w-md p-4 bg-surface rounded shadow">
             <h3 className="text-lg font-medium mb-3">Add Category</h3>
 
             {error && <div className="mb-3 text-sm text-red-700 bg-red-100 p-2 rounded dark:bg-red-900 dark:text-red-200">{error}</div>}
@@ -58,12 +58,12 @@ const AddCategoryForm: React.FC<AddCategoryFormProps> = ({ onCategoryAdded }) =>
 
             <label className="block mb-2">
                 <span className="text-sm">Name</span>
-                <input name="name" value={form.name} onChange={handleChange} className="mt-1 block w-full border rounded p-2 bg-[var(--input)] border-[var(--border)] text-gray-900 dark:text-slate-100" placeholder="e.g. Groceries" />
+                <input name="name" value={form.name} onChange={handleChange} className="mt-1 block w-full border rounded p-2 bg-input border-border text-gray-900 dark:text-slate-100" placeholder="e.g. Groceries" />
             </label>
 
             <label className="block mb-2">
                 <span className="text-sm">Description (optional)</span>
-                <textarea name="description" value={form.description} onChange={handleChange} className="mt-1 block w-full border rounded p-2 bg-[var(--input)] border-[var(--border)] text-gray-900 dark:text-slate-100" rows={3} />
+                <textarea name="description" value={form.description} onChange={handleChange} className="mt-1 block w-full border rounded p-2 bg-input border-border text-gray-900 dark:text-slate-100" rows={3} />
             </label>
 
             <label className="block mb-4">
@@ -73,7 +73,7 @@ const AddCategoryForm: React.FC<AddCategoryFormProps> = ({ onCategoryAdded }) =>
 
             <div className="flex items-center gap-2">
                 <button type="submit" disabled={loading} className="px-3 py-2 bg-blue-600 text-white rounded disabled:opacity-60 dark:bg-blue-500">{loading ? 'Saving...' : 'Add Category'}</button>
-                <button type="button" onClick={() => { setForm(defaultForm); setError(null); setSuccess(null) }} className="px-3 py-2 border-[var(--border)] rounded dark:text-slate-100">Reset</button>
+                <button type="button" onClick={() => { setForm(defaultForm); setError(null); setSuccess(null) }} className="px-3 py-2 border-border rounded dark:text-slate-100">Reset</button>
             </div>
         </form>
     )

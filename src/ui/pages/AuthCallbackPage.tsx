@@ -49,11 +49,11 @@ const AuthCallbackPage = () => {
 
     if (status === 'processing') {
         return (
-            <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
+            <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 mx-auto" style={{ borderColor: 'var(--primary)' }}></div>
-                    <h1 className="mt-6 text-2xl font-semibold" style={{ color: 'var(--foreground)' }}>Processing Authentication</h1>
-                    <p className="mt-2" style={{ color: 'var(--gray)' }}>Please wait while we complete your sign-in...</p>
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 mx-auto border-primary"></div>
+                    <h1 className="mt-6 text-2xl font-semibold text-foreground">Processing Authentication</h1>
+                    <p className="mt-2 text-gray">Please wait while we complete your sign-in...</p>
                 </div>
             </div>
         )
@@ -61,12 +61,12 @@ const AuthCallbackPage = () => {
 
     if (status === 'success') {
         return (
-            <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
+            <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-background text-foreground">
                 <div className="text-center">
-                    <div className="text-6xl mb-4" style={{ color: 'var(--primary)' }}>✅</div>
-                    <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--foreground)' }}>Authentication Successful!</h1>
-                    <p className="mb-4" style={{ color: 'var(--gray)' }}>Welcome! You've been successfully signed in.</p>
-                    <p className="text-sm" style={{ color: 'var(--gray)' }}>Redirecting to your profile...</p>
+                    <div className="text-6xl mb-4">✅</div>
+                    <h1 className="text-3xl font-bold mb-2 text-foreground">Authentication Successful!</h1>
+                    <p className="mb-4 text-gray">Welcome! You've been successfully signed in.</p>
+                    <p className="text-sm text-gray">Redirecting to your profile...</p>
                     <div className="mt-6">
                         <div className="w-64 rounded-full h-2 mx-auto" style={{ background: 'var(--gray)' }}>
                             <div className="h-2 rounded-full animate-pulse" style={{ width: '100%', background: 'var(--primary)' }}></div>
@@ -79,24 +79,22 @@ const AuthCallbackPage = () => {
 
     if (status === 'error') {
         return (
-            <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
-                <div className="max-w-md w-full space-y-8 p-8 rounded-lg shadow-md" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
+            <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
+                <div className="max-w-md w-full space-y-8 p-8 rounded-lg shadow-md bg-background text-foreground">
                     <div className="text-center">
-                        <div className="text-6xl mb-4" style={{ color: '#e53935' }}>❌</div>
-                        <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--foreground)' }}>Authentication Failed</h1>
-                        <p className="mb-4" style={{ color: 'var(--gray)' }}>{error}</p>
+                        <div className="text-6xl mb-4">❌</div>
+                        <h1 className="text-2xl font-bold mb-2">Authentication Failed</h1>
+                        <p className="mb-4 text-gray">{error}</p>
                         <div className="space-y-3">
                             <button
                                 onClick={handleRetryAuth}
-                                className="w-full px-4 py-2 rounded-md transition-colors"
-                                style={{ background: 'var(--primary)', color: 'var(--background)' }}
+                                className="w-full px-4 py-2 rounded-md transition-colors bg-primary text-background"
                             >
                                 Try Again
                             </button>
                             <button
                                 onClick={() => navigate('/')}
-                                className="w-full px-4 py-2 rounded-md transition-colors"
-                                style={{ background: 'var(--gray)', color: 'var(--background)' }}
+                                className="w-full px-4 py-2 rounded-md text-background bg-foreground border-border transition-colors"
                             >
                                 Go to Homepage
                             </button>
