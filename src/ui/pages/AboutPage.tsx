@@ -1,6 +1,11 @@
 const AboutPage = () => {
   return (
-    <div>home</div>
+    <div>
+      <h1>About Expense Tracker MVP</h1>
+      <p>
+        This application is designed to help you track your expenses efficiently.
+      </p>
+    </div>
   )
 }
 

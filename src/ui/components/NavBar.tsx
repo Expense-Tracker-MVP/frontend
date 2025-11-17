@@ -5,10 +5,13 @@ import ThemeToggle from '@ui/components/ThemeToggle'
 const Navbar = () => {
     return (
         <div className="flex gap-1.5 justify-around items-center p-4 bg-[var(--primary)]" >
+            <Link className="text-1.5xl font-bold hover:underline text-gray-600 dark:text-gray-100" to="/">Home</Link>
+            <Link className="text-1.5xl font-bold hover:underline text-gray-600 dark:text-gray-100" to="/about">About</Link>
             <Link className="text-1.5xl font-bold hover:underline text-gray-600 dark:text-gray-100" to="/sign-in">Sign In</Link>
             <Link className="text-1.5xl font-bold hover:underline text-gray-600 dark:text-gray-100" to="/sign-up">Sign Up</Link>
             <Link className="text-1.5xl font-bold hover:underline text-gray-600 dark:text-gray-100" to="/profile">Profile</Link>
             <Link className="text-1.5xl font-bold hover:underline text-gray-600 dark:text-gray-100" to="/expenses">Expenses</Link>
+            <Link className="text-1.5xl font-bold hover:underline text-gray-600 dark:text-gray-100" to="/visuals">Visuals</Link>
             <ThemeToggle />
         </div>
     )

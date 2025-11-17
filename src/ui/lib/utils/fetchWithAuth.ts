@@ -2,16 +2,21 @@ import { refreshTokenApi } from '@ui/lib/apis/auth'
 
 let isRefreshing = false
 let failedQueue: Array<{
-    resolve: (value?: unknown) => void
+    resolve: (value: Response | PromiseLike<Response>) => void
     reject: (reason?: unknown) => void
+    url: string
+    config: RequestInit
 }> = []
 
 const processQueue = (error: Error | null) => {
-    failedQueue.forEach(prom => {
+    failedQueue.forEach((prom) => {
         if (error) {
             prom.reject(error)
         } else {
-            prom.resolve()
+            // Retry the request with the refreshed token
+            fetch(prom.url, prom.config)
+                .then(response => prom.resolve(response))
+                .catch(err => prom.reject(err))
         }
     })
     failedQueue = []
@@ -32,11 +37,8 @@ export const fetchWithAuth = async (
     if (response.status === 401) {
         if (isRefreshing) {
             // If a refresh is already in progress, queue this request
-            return new Promise((resolve, reject) => {
-                failedQueue.push({ resolve, reject })
-            }).then(() => {
-                // Retry the original request after refresh completes
-                return fetch(url, config)
+            return new Promise<Response>((resolve, reject) => {
+                failedQueue.push({ resolve, reject, url, config })
             })
         }
 

@@ -1,51 +1,67 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuthState } from '@ui/lib/store/authStore'
 import { createExpenseApi } from '@ui/lib/apis/expenses'
+import { getCategoriesByUser } from '@ui/lib/apis/categories'
+import type { Category } from '@ui/lib/types/category'
+import type { ExpenseFormState, AddExpenseFormProps } from '@ui/lib/types/components'
+import type { ExpenseDTO } from '../lib/types/expense'
 
-type Expense = {
-    id?: string
-    description: string
-    amount: number
-    date: string // ISO date
-    category: string
-    currency: string
-}
-
-type FormState = {
-    description: string
-    amount: string
-    date: string
-    category: string
-    currency: string
-}
-
-const defaultForm: FormState = {
+const defaultForm: ExpenseFormState = {
+    name: '',
     description: '',
     amount: '',
     date: new Date().toISOString().slice(0, 10),
-    category: 'other',
+    category: '',
     currency: 'SGD',
 }
 
-const categories = ['food', 'transport', 'entertainment', 'bills', 'other']
+// will be loaded from backend for current user
+// const categories = ['food', 'transport', 'entertainment', 'bills', 'other']
 const currencies = ['SGD', 'USD', 'EUR', 'GBP', 'JPY', 'AUD']
 
-const AddExpenseForm: React.FC = () => {
-    const [form, setForm] = useState<FormState>(defaultForm)
+const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ preSelectedCategoryId, onSuccess }) => {
+    const [form, setForm] = useState<ExpenseFormState>({
+        ...defaultForm,
+        category: preSelectedCategoryId || ''
+    })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState<string | null>(null)
     const { user } = useAuthState()
+    const [categoriesList, setCategoriesList] = useState<Category[]>([])
+    const [categoriesLoading, setCategoriesLoading] = useState(false)
+
+    // load categories for current user
+    const load = async () => {
+        if (!user?.id) return
+        setCategoriesLoading(true)
+        try {
+            const cats = await getCategoriesByUser(user.id)
+            setCategoriesList(cats)
+            // if form category not set, set to first
+            if (!form.category && cats.length) {
+                setForm(prev => ({ ...prev, category: cats[0].id ?? '' }))
+            }
+        } catch (err: any) {
+            console.warn('Failed to load categories', err)
+        } finally {
+            setCategoriesLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        load()
+    }, [user?.id])
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
         const { name, value } = e.target
-        setForm(prev => ({ ...prev, [name]: value } as unknown as FormState))
+        setForm(prev => ({ ...prev, [name]: value } as unknown as ExpenseFormState))
     }
 
-    const validate = (data: FormState) => {
-        if (!data.description.trim()) return 'Description is required'
+    const validate = (data: ExpenseFormState) => {
+        if (!data.name.trim()) return 'Name is required'
         const amountNum = parseFloat(data.amount)
         if (!isFinite(amountNum) || amountNum <= 0) return 'Amount must be greater than 0'
         if (!data.date) return 'Date is required'
@@ -66,20 +82,25 @@ const AddExpenseForm: React.FC = () => {
 
         setLoading(true)
         try {
-            const expenseToCreate: Expense = {
-                id: user?.id || '',
-                description: form.description,
+            const expenseRequest: ExpenseDTO = {
+                userId: user?.id || null,
+                categoryId: form.category || null,
+                name: form.name,
+                description: form.description || null,
                 amount: parseFloat(form.amount),
-                date: form.date,
-                category: form.category,
-                currency: form.currency,
+                currency: form.currency || 'SGD',
+                transactionDate: form.date,
+                source: 'manual',
             }
-
-            const created = await createExpenseApi(expenseToCreate)
+            const created = await createExpenseApi(expenseRequest)
             setSuccess(
-                `Saved expense "${created.description}" (${created.currency ?? ''} ${created.amount.toFixed(2)})`
+                `Saved expense "${created.name || created.description}" (${created.currency ?? ''} ${created.amount.toFixed(2)})`
             )
-            setForm(defaultForm)
+            setForm({
+                ...defaultForm,
+                category: preSelectedCategoryId || ''
+            })
+            onSuccess?.()
         } catch (err: any) {
             setError(err?.message ?? 'Unknown error')
         } finally {
@@ -100,7 +121,19 @@ const AddExpenseForm: React.FC = () => {
             )}
 
             <label className="block mb-2">
-                <span className="text-sm">Description</span>
+                <span className="text-sm">Name</span>
+                <input
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full border rounded p-2 bg-[var(--input)] border-[var(--border)] text-gray-900 dark:text-slate-100"
+                    placeholder="Short title for expense, e.g. 'Lunch'"
+                />
+            </label>
+
+            <label className="block mb-2">
+                <span className="text-sm">Description (optional)</span>
                 <input
                     name="description"
                     value={form.description}
@@ -150,21 +183,27 @@ const AddExpenseForm: React.FC = () => {
                 />
             </label>
 
-            <label className="block mb-4">
-                <span className="text-sm">Category</span>
-                <select
-                    name="category"
-                    value={form.category}
-                    onChange={handleChange}
-                    className="mt-1 block w-full border rounded p-2 border-[var(--border)] text-gray-900 bg-[var(--input)] dark:text-slate-100"
-                >
-                    {categories.map(c => (
-                        <option key={c} value={c}>
-                            {c[0].toUpperCase() + c.slice(1)}
-                        </option>
-                    ))}
-                </select>
-            </label>
+            {!preSelectedCategoryId && (
+                <label className="block mb-4">
+                    <span className="text-sm">Category</span>
+                    <select
+                        name="category"
+                        value={form.category}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border rounded p-2 border-[var(--border)] text-gray-900 bg-[var(--input)] dark:text-slate-100"
+                    >
+                        {categoriesLoading && <option>Loading...</option>}
+                        {!categoriesLoading && categoriesList.length === 0 && (
+                            <option value="">No categories</option>
+                        )}
+                        {!categoriesLoading && categoriesList.map(c => (
+                            <option key={c.id} value={c.id}>
+                                {c.name}
+                            </option>
+                        ))}
+                    </select>
+                </label>
+            )}
 
             <div className="flex items-center gap-2">
                 <button

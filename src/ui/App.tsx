@@ -9,6 +9,8 @@ import SignUpPage from './pages/SignUpPage';
 import ProfilePage from './pages/ProfilePage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
 import Navbar from './components/NavBar';
+import AboutPage from './pages/AboutPage';
+import VisualsPage from './pages/VisualsPage';
 
 function App() {
 
@@ -20,6 +22,12 @@ function App() {
             <>
               <Navbar />
               <HomePage />
+            </>
+          } />
+          <Route path="/about" element={
+            <>
+              <Navbar />
+              <AboutPage />
             </>
           } />
           <Route path="/sign-in" element={
@@ -40,6 +48,12 @@ function App() {
             <AuthGuard>
               <Navbar />
               <ExpensesPage />
+            </AuthGuard>
+          } />
+          <Route path="/visuals" element={
+            <AuthGuard>
+              <Navbar />
+              <VisualsPage />
             </AuthGuard>
           } />
           <Route path="/profile" element={

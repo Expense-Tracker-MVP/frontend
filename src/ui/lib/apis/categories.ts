@@ -1,52 +1,66 @@
 import { fetchWithAuth } from '@ui/lib/utils/fetchWithAuth'
-
-export type Category = {
-    id?: string
-    userId?: string
-    name: string
-    description?: string
-    color?: string
-}
-
-type CreateCategoryResponse = {
-    status: "success" | "error"
-    message?: string
-    data?: Category
-}
+import type { Category, CategoryResponse } from '@ui/lib/types/category'
+import { handleResponse, getAuthHeaders } from '@ui/lib/utils/apiHelpers'
 
 const BASE_URL = `${import.meta.env.VITE_PUBLIC_BACKEND_URL}/api/v1`;
 
 export async function createCategoryApi(category: Category): Promise<Category> {
     const res = await fetchWithAuth(`${BASE_URL}/categories`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-		credentials: 'include',
+        ...getAuthHeaders(),
         body: JSON.stringify(category),
     })
 
-    if (!res.ok) {
-        let msg: string | undefined = `Request failed with status ${res.status}`
-        try {
-            const json: CreateCategoryResponse = await res.json()
-            if (json?.status === "error") {
-                msg = json?.message
-            }
-        } catch (_err) {
-            // ignore parse errors
-        }
-        throw new Error(msg)
+    const data: CategoryResponse = await handleResponse<CategoryResponse>(res)
+
+    if (!data || data.message || !data.data) {
+        throw new Error(data?.message ?? 'Unexpected response from server')
     }
 
-    const json: CreateCategoryResponse = await res.json()
-    if (!json || json.message || !json.data) {
-        throw new Error(json?.message ?? 'Unexpected response from server')
-    }
-
-    return json.data
+    return data.data as Category
 }
 
-export default {
-    createCategoryApi,
+export async function getCategoriesByUser(userId: string): Promise<Category[]> {
+    const res = await fetchWithAuth(`${BASE_URL}/categories/user/${userId}`, {
+        method: 'GET',
+        ...getAuthHeaders()
+    })
+
+    const data: CategoryResponse = await handleResponse<CategoryResponse>(res)
+    if (!data || !data.data || data.message) {
+        throw new Error(data?.message ?? 'Unexpected response from server')
+    }
+
+    return data.data as Category[]
+}
+
+export async function updateCategoryApi(id: string, category: Category): Promise<Category> {
+    const res = await fetchWithAuth(`${BASE_URL}/categories/${id}`, {
+        method: 'PUT',
+        ...getAuthHeaders(),
+        body: JSON.stringify(category),
+    })
+
+    const data: CategoryResponse = await handleResponse<CategoryResponse>(res)
+
+    if (!data || data.message || !data.data) {
+        throw new Error(data?.message ?? 'Unexpected response from server')
+    }
+
+    return data.data as Category
+}
+
+export async function deleteCategoryApi(id: string): Promise<void> {
+    const res = await fetchWithAuth(`${BASE_URL}/categories/${id}`, {
+        method: 'DELETE',
+        ...getAuthHeaders(),
+    })
+
+    const data = await handleResponse<any>(res)
+
+    if (!data || data.message) {
+        throw new Error(data?.message ?? 'Unexpected response from server')
+    }
+
+    return
 }

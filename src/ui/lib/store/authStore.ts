@@ -91,7 +91,7 @@ export const useAuthStore = create<AuthState>()(
                 // Set loading state first
                 set({ isLoading: true })
                 
-                // Try to refresh token silently
+                // Try to refresh token and get access token silently
                 const refreshed = await get().refreshToken()
                 
                 if (refreshed) {

@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
-import { createCategoryApi, type Category } from '@ui/lib/apis/categories'
+import { createCategoryApi } from '@ui/lib/apis/categories'
+import type { Category } from '@ui/lib/types/category'
+import { useAuthState } from '@ui/lib/store/authStore'
+import type { AddCategoryFormProps } from '@ui/lib/types/components'
 
 const defaultForm = { name: '', description: '', color: '#06b6d4' }
 
-const AddCategoryForm: React.FC = () => {
+const AddCategoryForm: React.FC<AddCategoryFormProps> = ({ onCategoryAdded }) => {
+    const { user } = useAuthState()
     const [form, setForm] = useState(defaultForm)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -34,9 +38,10 @@ const AddCategoryForm: React.FC = () => {
 
         setLoading(true)
         try {
-            const created = await createCategoryApi(form as Category)
+            const created = await createCategoryApi({ ...form, userId: user?.id } as Category)
             setSuccess(`Created category "${created.name}"`)
             setForm(defaultForm)
+            onCategoryAdded?.()
         } catch (err: any) {
             setError(err?.message ?? 'Unknown error')
         } finally {
