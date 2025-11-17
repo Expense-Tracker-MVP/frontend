@@ -61,7 +61,7 @@ const AuthCallbackPage = () => {
 
     if (status === 'success') {
         return (
-            <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
+            <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
                 <div className="text-center">
                     <div className="text-6xl mb-4" style={{ color: 'var(--primary)' }}>✅</div>
                     <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--foreground)' }}>Authentication Successful!</h1>

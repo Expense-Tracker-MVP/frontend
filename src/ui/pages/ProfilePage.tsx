@@ -55,7 +55,7 @@ const ProfilePage = () => {
 
   if (authLoading || isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-[var(--background)]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600 dark:text-slate-300">Loading profile...</p>
@@ -66,7 +66,7 @@ const ProfilePage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-[var(--background)]">
         <div className="max-w-md w-full space-y-8 p-8 bg-[var(--surface)] rounded-lg shadow-md">
           <div className="text-center">
             <div className="text-red-500 text-6xl mb-4">⚠️</div>
@@ -86,7 +86,7 @@ const ProfilePage = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-[var(--background)]">
         <div className="text-center">
           <p className="text-gray-600 dark:text-slate-300">No user data found</p>
           <a href="/sign-in" className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 mt-2 inline-block">
@@ -98,7 +98,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)] py-12">
+    <div className="min-h-[calc(100vh-4rem)] bg-[var(--background)] py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="bg-[var(--surface)] rounded-lg shadow-md p-6 mb-6">
@@ -187,7 +187,7 @@ const ProfilePage = () => {
         {/* Navigation */}
         <div className="mt-6 text-center">
           <a
-            href="/"
+            href="/expenses"
             className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium"
           >
             ← Back to Dashboard

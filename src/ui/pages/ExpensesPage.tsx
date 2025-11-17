@@ -51,7 +51,7 @@ const ExpensesPage = () => {
   const loading = categoriesLoading || expensesLoading
 
   return (
-    <div className="min-h-screen bg-[var(--background)] p-6">
+    <div className="min-h-[calc(100vh-4rem)] bg-[var(--background)] p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6 flex justify-between items-center">

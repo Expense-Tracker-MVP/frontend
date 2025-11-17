@@ -5,7 +5,7 @@ import { useAuthStore } from '../lib/store/authStore'
 const Navbar = () => {
     const { isAuthenticated } = useAuthStore()
     return (
-        <div className="flex gap-1.5 justify-around items-center p-4 bg-[var(--primary)]" >
+        <div className="flex gap-1.5 justify-around items-center h-16 px-4 bg-[var(--primary)]" >
             <Link className="text-1.5xl font-bold hover:underline text-gray-600 dark:text-gray-100" to="/">Home</Link>
             <Link className="text-1.5xl font-bold hover:underline text-gray-600 dark:text-gray-100" to="/about">About</Link>
             {isAuthenticated ? null : (
