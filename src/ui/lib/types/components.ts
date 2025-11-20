@@ -47,6 +47,8 @@ export type EditCategoryFormProps = {
     onCancel?: () => void
 }
 
+export type CategoryCardSortOption = 'alphabetical' | 'recent' | 'expensive'
+
 export type EditExpenseFormProps = {
     expense: ExpenseDTO
     onSuccess?: () => void
