@@ -4,7 +4,7 @@ import type { Category } from '@ui/lib/types/category'
 import { useAuthState } from '@ui/lib/store/authStore'
 import type { AddCategoryFormProps } from '@ui/lib/types/components'
 
-const defaultForm = { name: '', description: '', color: '#06b6d4' }
+const defaultForm = { name: '', description: '', color: '#12c58a' }
 
 const AddCategoryForm: React.FC<AddCategoryFormProps> = ({ onCategoryAdded }) => {
     const { user } = useAuthState()
