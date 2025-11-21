@@ -23,7 +23,11 @@ const ExpenseCard = ({ expense, onEdit, onDelete }: ExpenseCardProps) => {
   }
 
   return (
-    <div className="bg-surface border border-border rounded-lg p-3 hover:shadow-md transition-shadow">
+    <div 
+      className="bg-surface border border-border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer"
+      onDoubleClick={() => onEdit?.(expense)}
+      title="Double-click to edit"
+    >
       <div className="flex justify-between items-start">
         <div className="flex-1">
           <h4 className="font-medium text-foreground">{expense.name}</h4>

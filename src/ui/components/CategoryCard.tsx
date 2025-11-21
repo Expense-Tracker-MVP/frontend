@@ -101,7 +101,9 @@ const CategoryCard = ({ category, expenses, isExpanded, onToggleExpand, onExpens
         target.closest('button') || 
         target.closest('input') || 
         target.closest('a') || 
-        target.closest('[contenteditable]')) {
+        target.closest('[contenteditable]') ||
+        target.closest('[data-ignore-doubleclick]')
+      ) {
       return
     }
     
@@ -301,7 +303,7 @@ const CategoryCard = ({ category, expenses, isExpanded, onToggleExpand, onExpens
           </p>
         ) : (
           (isExpanded ? filteredAndSortedExpenses : categoryExpenses).map((expense) => (
-            <div key={expense.id || `${expense.userId}-${expense.transactionDate}-${expense.name}`}>
+            <div key={expense.id || `${expense.userId}-${expense.transactionDate}-${expense.name}`} data-ignore-doubleclick="true">
               {editingExpense === expense.id ? (
                 <div className="p-2 bg-background rounded border border-border">
                   <EditExpenseForm 
@@ -314,11 +316,13 @@ const CategoryCard = ({ category, expenses, isExpanded, onToggleExpand, onExpens
                   />
                 </div>
               ) : (
-                <ExpenseCard 
-                  expense={expense}
-                  onEdit={() => expense.id && handleEditExpense(expense.id)}
-                  onDelete={() => expense.id && onExpenseDeleted?.(expense.id)}
-                />
+                <div data-ignore-doubleclick="true">
+                  <ExpenseCard 
+                    expense={expense}
+                    onEdit={() => expense.id && handleEditExpense(expense.id)}
+                    onDelete={() => expense.id && onExpenseDeleted?.(expense.id)}
+                  />
+                </div>
               )}
             </div>
           ))
